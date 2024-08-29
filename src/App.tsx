@@ -1,7 +1,6 @@
 import React from 'react';
+import { SalesIntegrations } from './components/SalesIntegrations';
 
-const App: React.FC = () => {
-  return <div></div>;
+export const App: React.FC = () => {
+  return <SalesIntegrations />;
 };
-
-export default App;
