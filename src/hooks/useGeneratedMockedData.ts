@@ -94,7 +94,7 @@ const getCustomSalesDataItems = (): SalesDataItem[] => {
     },
   ];
 
-  return getRandomArrayElements(dataList, getRandomIntBetween(0, dataList.length - 1));
+  return dataList;
 };
 
 const generateSalesRow = (): SalesDataRow => {

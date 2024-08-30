@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { FaTrash } from 'react-icons/fa';
 import './index.css';
 import { Select } from '../Select';
@@ -18,6 +18,8 @@ export type PopupProps = {
 };
 
 export const Popup: React.FC<PopupProps> = ({ item, onRemove, onClose, onSelectComparator, onChangeValue }) => {
+  const popupRef = useRef<HTMLDivElement>(null);
+
   const comparators = DATA_TYPE_COMPARATORS[item.type];
   const comparatorOptions: Option[] = comparators.map(c => {
     return {
@@ -34,9 +36,18 @@ export const Popup: React.FC<PopupProps> = ({ item, onRemove, onClose, onSelectC
     onChangeValue(value);
   };
 
-  console.log('comparatorOptions', comparatorOptions);
+  useEffect(() => {
+    const tid = setTimeout(() => {
+      popupRef.current?.focus();
+    }, 150);
+
+    return () => {
+      clearTimeout(tid);
+    };
+  }, []);
+
   return (
-    <div className="popup">
+    <div className="popup" ref={popupRef} tabIndex={0} role="dialog" aria-modal="true">
       <ClickOutsideCatcher onClickOutside={onClose}>
         <div className="popup-header">
           <div className="popup-header-title">{item.alias}</div>

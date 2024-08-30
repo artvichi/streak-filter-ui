@@ -62,3 +62,9 @@ export enum Comparator {
 }
 
 export type ChipItem = SalesDataItem & { selector?: { comparator?: Comparator; value?: string } };
+
+export interface FilterItem {
+  comparator: Comparator;
+  value: string;
+  alias: string;
+}

@@ -10,6 +10,12 @@
   -moz-box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.75);
   background-color: white;
+  z-index: 100;
+}
+
+.popup:focus-visible {
+  outline-offset: 4px;
+  outline-color: blue;
 }
 
 .popup-header {

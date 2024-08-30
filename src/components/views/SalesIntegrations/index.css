@@ -2,3 +2,34 @@
   max-width: 100%;
   display: inline-block;
 }
+
+.list-block-label {
+  margin-top: 16px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.list-block {
+  margin-top: 8px;
+  border: 2px solid gray;
+  padding: 8px;
+  border-radius: 12px;
+}
+
+.list-item {
+  border-bottom: 1px solid gray;
+  padding: 4px 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.highlighted-list-item-data {
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: underline;
+  padding-right: 2px;
+}
+
+.list-item-data {
+  padding-right: 2px;
+}

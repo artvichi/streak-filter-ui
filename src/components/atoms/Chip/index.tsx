@@ -14,7 +14,7 @@ export type ChipProps = {
 };
 
 export const Chip: React.FC<ChipProps> = ({ item, onRemove, onSelectComparator, onChangeValue }) => {
-  const [popupVisible, setPopupVisible] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(true);
 
   const onOpenChip = () => {
     setPopupVisible(true);

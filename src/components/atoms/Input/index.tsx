@@ -18,7 +18,7 @@ export const Input: React.FC<InputProps> = ({ label, value, onChange }) => {
         {label}
       </label>
       <div className="input-control-block">
-        <input className="input" id="input" value={value} onChange={onChangeHandler} />
+        <input className="input" id="input" value={value} onChange={onChangeHandler} tabIndex={0} />
       </div>
     </div>
   );

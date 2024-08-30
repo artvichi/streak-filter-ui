@@ -1,11 +1,14 @@
-import React, { useMemo, useState } from 'react';
-import { ChipItem, Comparator, SalesDataItem, SalesDataRow } from '../../../types/typings';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ChipItem, Comparator, FilterItem, SalesDataItem, SalesDataRow } from '../../../types/typings';
 import './index.css';
 import { Chip } from '../../atoms/Chip';
 import { InlineInput } from '../../atoms/InlineInput';
 import { Option } from '../../../types/utilities';
 
-export const Filter: React.FC<{ data: SalesDataRow[] }> = ({ data }) => {
+export const Filter: React.FC<{ data: SalesDataRow[]; onChangeFilters: (filters: FilterItem[]) => void }> = ({
+  data,
+  onChangeFilters,
+}) => {
   const [chips, setChips] = useState<ChipItem[]>([]);
 
   const { fields, normalized } = useMemo<{ fields: Option[]; normalized: Record<string, SalesDataItem> }>(() => {
@@ -106,6 +109,20 @@ export const Filter: React.FC<{ data: SalesDataRow[] }> = ({ data }) => {
     });
   };
 
+  useEffect(() => {
+    onChangeFilters(
+      chips
+        .filter(c => !!c.selector?.comparator && typeof c.selector?.value !== 'undefined')
+        .map(c => {
+          return {
+            alias: c.alias,
+            comparator: c.selector?.comparator as Comparator,
+            value: c.selector?.value as string,
+          };
+        }),
+    );
+  }, [chips, onChangeFilters]);
+
   return (
     <div className="filter-container">
       <div className="filter-label-block">Filter</div>
@@ -121,8 +138,7 @@ export const Filter: React.FC<{ data: SalesDataRow[] }> = ({ data }) => {
             />
           );
         })}
-
-        <InlineInput fields={fields} onSelected={onOptionSelected} />
+        {fields.length ? <InlineInput fields={fields} onSelected={onOptionSelected} /> : null}
       </div>
     </div>
   );
