@@ -68,3 +68,8 @@ export interface FilterItem {
   value: string;
   alias: string;
 }
+
+export interface SortItem {
+  field: string;
+  order: 'asc' | 'desc';
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { FaTrash } from 'react-icons/fa';
 import './index.css';
 import { Select } from '../Select';
@@ -46,8 +46,33 @@ export const Popup: React.FC<PopupProps> = ({ item, onRemove, onClose, onSelectC
     };
   }, []);
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Escape') {
+      onClose();
+    }
+    if (event.key === 'Backspace') {
+      onRemove()
+    }
+  };
+
+  const onBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    const relatedTarget = event.relatedTarget;
+
+    if (relatedTarget === null || !popupRef.current?.contains(relatedTarget as Node)) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="popup" ref={popupRef} tabIndex={0} role="dialog" aria-modal="true">
+    <div
+      className="popup"
+      ref={popupRef}
+      tabIndex={-1}
+      role="dialog"
+      aria-modal="true"
+      onKeyDown={handleKeyDown}
+      onBlur={onBlur}
+    >
       <ClickOutsideCatcher onClickOutside={onClose}>
         <div className="popup-header">
           <div className="popup-header-title">{item.alias}</div>
@@ -63,7 +88,12 @@ export const Popup: React.FC<PopupProps> = ({ item, onRemove, onClose, onSelectC
             onSelect={onSelectComparatorHandler}
           />
           <div className="popup-content-field">
-            <Input label="Value" onChange={onChangeInputValueHandler} value={item.selector?.value || ''} />
+            <Input
+              label="Value"
+              onChange={onChangeInputValueHandler}
+              value={item.selector?.value || ''}
+              onClose={onClose}
+            />
           </div>
         </div>
       </ClickOutsideCatcher>

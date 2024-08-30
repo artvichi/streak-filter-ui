@@ -109,10 +109,22 @@ export const Filter: React.FC<{ data: SalesDataRow[]; onChangeFilters: (filters:
     });
   };
 
+  const onRemoveLastChip = () => {
+    setChips(currentChips => {
+      if (currentChips.length) {
+        const arr = [...currentChips];
+        arr.splice(currentChips.length - 1, 1);
+        return arr;
+      }
+
+      return currentChips;
+    });
+  };
+
   useEffect(() => {
     onChangeFilters(
       chips
-        .filter(c => !!c.selector?.comparator && typeof c.selector?.value !== 'undefined')
+        .filter(c => !!c.selector?.comparator && typeof c.selector?.value !== 'undefined' && c.selector?.value !== '')
         .map(c => {
           return {
             alias: c.alias,
@@ -138,7 +150,9 @@ export const Filter: React.FC<{ data: SalesDataRow[]; onChangeFilters: (filters:
             />
           );
         })}
-        {fields.length ? <InlineInput fields={fields} onSelected={onOptionSelected} /> : null}
+        {fields.length ? (
+          <InlineInput fields={fields} onSelected={onOptionSelected} onRemove={onRemoveLastChip} />
+        ) : null}
       </div>
     </div>
   );

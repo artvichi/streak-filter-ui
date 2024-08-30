@@ -2,20 +2,24 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useGeneratedMockedData } from '../../../hooks/useGeneratedMockedData';
 import { Filter } from '../../molecules/Filter';
 import './index.css';
-import { Comparator, FilterItem } from '../../../types/typings';
+import { Comparator, FilterItem, SalesDataTypes, SortItem } from '../../../types/typings';
+import { Sort } from '../../atoms/Sort';
+import { ListItem } from '../../atoms/ListItem';
 
 const ROWS = 1000;
 
 export const SalesIntegrations: React.FC = () => {
   const [filters, setFilters] = useState<FilterItem[]>([]);
+  const [sort, setSort] = useState<SortItem | null>(null);
+
   const mockedData = useGeneratedMockedData(ROWS);
 
   const onChangeFilters = useCallback((newFilters: FilterItem[]) => {
     setFilters(newFilters);
   }, []);
 
-  const filteredData = useMemo(() => {
-    return filters.length
+  const filteredSortedData = useMemo(() => {
+    const filteredData = filters.length
       ? mockedData
           .filter(md => {
             return (
@@ -23,21 +27,29 @@ export const SalesIntegrations: React.FC = () => {
                 const filter = filters.find(f => f.alias === i.alias);
 
                 if (filter) {
-                  if (i.value === null) {
+                  if (i.value === null || typeof i.value === 'undefined') {
                     return false;
                   }
                   // logic simplified for different types of data - string / number / date / array would be casted to strings and compared
+
+                  let filterValue: string | number = filter.value.toLowerCase();
+                  let dataValue: string | number = `${i.value}`.toLowerCase();
+
+                  if (i.type === SalesDataTypes.number) {
+                    filterValue = parseInt(filter.value);
+                    dataValue = parseInt(`${i.value}` as string);
+                  }
                   switch (filter.comparator) {
                     case Comparator.equal:
-                      return filter.value.toLowerCase() === `${i.value}`.toLowerCase();
+                      return filterValue === dataValue;
                     case Comparator.lessThan:
-                      return filter.value.toLowerCase() > `${i.value}`.toLowerCase();
+                      return filterValue > dataValue;
                     case Comparator.greaterThan:
-                      return filter.value.toLowerCase() < `${i.value}`.toLowerCase();
+                      return filterValue < dataValue;
                     case Comparator.contains:
-                      return `${i.value}`.toLowerCase().includes(filter.value.toLowerCase());
+                      return `${dataValue}`.includes(`${filterValue}`);
                     case Comparator.doesNotEqual:
-                      return filter.value.toLowerCase() !== `${i.value}`.toLowerCase();
+                      return filterValue !== dataValue;
                   }
                 }
 
@@ -52,62 +64,105 @@ export const SalesIntegrations: React.FC = () => {
             };
           })
       : [];
-  }, [filters, mockedData]);
+
+    if (sort) {
+      return filteredData.sort((a, b) => {
+        const itemA = a.items.find(i => i.data.alias === sort.field);
+        const itemB = b.items.find(i => i.data.alias === sort.field);
+
+        if (itemA?.data?.value && !itemB?.data?.value) {
+          return sort.order === 'asc' ? 1 : -1;
+        }
+
+        if (itemB?.data?.value && !itemA?.data?.value) {
+          return sort.order === 'asc' ? -1 : 1;
+        }
+
+        if (itemA?.data?.value && itemB?.data?.value) {
+          if (itemA.data.value > itemB.data.value) {
+            return sort.order === 'asc' ? 1 : -1;
+          }
+
+          if (itemA.data.value < itemB.data.value) {
+            return sort.order === 'asc' ? -1 : 1;
+          }
+        }
+
+        return 0;
+      });
+    }
+
+    return filteredData;
+  }, [filters, mockedData, sort]);
 
   return (
     <div className="sales-integrations-filter-block">
-      <Filter data={mockedData} onChangeFilters={onChangeFilters} />
-      <div className="list-block-label">
-        Found {filteredData.length} results, from total {mockedData.length} rows
+      <div className="sales-integrations-filter-block-header">
+        <div className="sales-integrations-filter">
+          <Filter data={mockedData} onChangeFilters={onChangeFilters} />
+        </div>
+        {filters.length ? (
+          <div className="sales-integrations-sort">
+            <Sort filters={filters} sort={sort} onChangeSort={setSort} />
+          </div>
+        ) : null}
       </div>
-      {filteredData.length ? (
+
+      <div className="list-block-label">
+        Found {filteredSortedData.length} results, from total {mockedData.length} rows
+      </div>
+      {filteredSortedData.length ? (
         <div className="list-block">
-          {filteredData.map((d, i) => {
+          {filteredSortedData.map((d, i) => {
+            // TODO for further optimization extract to separate component with React.memo
             return (
               <div className="list-item" key={`${d.createdAt.toString()}_${d.toString()}_${i}`}>
                 {i + 1}. &nbsp;
                 {d.items.map((i, index, arr) => {
-                  if (!i.data.value) {
+                  if (typeof i.data.value === 'undefined' || i.data.value === null) {
                     return null;
                   }
+
                   return (
-                    <span
+                    <ListItem
                       key={`${i.data.value}_${index}`}
-                      className={i.filter ? 'highlighted-list-item-data' : 'list-item-data'}
-                    >
-                      [{i.data.name}]:
-                      {i.data.value instanceof Date ? i.data.value.toString() : i.data.value}
-                      {index < arr.length - 1 ? ', ' : ''}
-                    </span>
+                      highlighted={!!i.filter}
+                      name={i.data.name}
+                      value={i.data.value instanceof Date ? i.data.value.toString() : `"${i.data.value}"`}
+                      separator={index < arr.length - 1 ? ', ' : ''}
+                    />
                   );
                 })}
               </div>
             );
           })}
         </div>
-      ) : (
+      ) : filters.length === 0 ? (
         <div className="list-block">
           {mockedData.map((d, i) => {
+            // TODO for further optimization extract to separate component with React.memo
             return (
               <div className="list-item" key={`${d.createdAt.toString()}_${d.toString()}_${i}`}>
                 {i + 1}. &nbsp;
                 {d.items.map((i, index, arr) => {
-                  if (!i.value) {
+                  if (typeof i.value === 'undefined' || i.value === null) {
                     return null;
                   }
+
                   return (
-                    <span key={`${i.value}_${index}`} className={'list-item-data'}>
-                      [{i.name}]:
-                      {i.value instanceof Date ? i.value.toString() : i.value}
-                      {index < arr.length - 1 ? ', ' : ''}
-                    </span>
+                    <ListItem
+                      key={`${i.value}_${index}`}
+                      name={i.name}
+                      value={i.value instanceof Date ? i.value.toString() : `"${i.value}"`}
+                      separator={index < arr.length - 1 ? ', ' : ''}
+                    />
                   );
                 })}
               </div>
             );
           })}
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

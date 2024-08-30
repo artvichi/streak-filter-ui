@@ -11,6 +11,10 @@
   font-weight: 700;
 }
 
+.select-control-block-large::after {
+  top: 18px;
+}
+
 .select-label {
   font-weight: 500;
   color: gray;
@@ -26,6 +30,10 @@
   box-sizing: border-box;
   -webkit-appearance: none;
   appearance: none;
+}
+
+.select-large {
+  padding: 14px;
 }
 
 .select:focus {

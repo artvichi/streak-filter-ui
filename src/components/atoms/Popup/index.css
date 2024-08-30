@@ -11,9 +11,11 @@
   box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.75);
   background-color: white;
   z-index: 100;
+  opacity: 0;
+  animation: fadeIn 0.15s ease-in forwards;
 }
 
-.popup:focus-visible {
+.popup:focus {
   outline-offset: 4px;
   outline-color: blue;
 }
