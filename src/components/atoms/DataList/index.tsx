@@ -1,10 +1,21 @@
 import React from 'react';
 import './index.css';
+import { Option } from '../../../types/utilities';
 
-export const DataList: React.FC = () => {
+export type DataListProps = {
+  options: Option[];
+};
+
+export const DataList: React.FC<DataListProps> = ({ options }) => {
   return (
     <datalist id="data-list">
-      <option value="Option"></option>
+      {options.map(o => {
+        return (
+          <option value={o.value} key={o.value}>
+            {o.label}
+          </option>
+        );
+      })}
     </datalist>
   );
 };

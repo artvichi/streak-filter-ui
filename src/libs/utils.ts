@@ -1,3 +1,5 @@
+import { Comparator } from '../types/typings';
+
 export const getRandomArrayElement = <T = unknown>(arr: T[]): T => {
   return arr[getRandomIntBetween(0, arr.length - 1)];
 };
@@ -25,4 +27,21 @@ export const getRandomArrayElements = <T = unknown>(arr: T[], count: number): T[
   }
 
   return randomIndexes.map(ri => arr[ri]);
+};
+
+export const getComparatorLabel = (comparator: Comparator): string => {
+  switch (comparator) {
+    case Comparator.equal:
+      return '=';
+    case Comparator.doesNotEqual:
+      return '!=';
+    case Comparator.contains:
+      return '[]';
+    case Comparator.greaterThan:
+      return '>';
+    case Comparator.lessThan:
+      return '<';
+    default:
+      return '';
+  }
 };

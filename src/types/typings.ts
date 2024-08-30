@@ -8,12 +8,8 @@ export enum SalesDataTypes {
 }
 
 // having this types might help identifying an item with strict check
-export enum SalesDataFields {
-  name = 'name',
-  stage = 'stage',
-  dateOfLastInteraction = 'dateOfLastInteraction',
-  patientsReferred = 'patientsReferred',
-  contactsAndOrganizations = 'contactsAndOrganizations',
+export enum SalesDataKind {
+  default = 'default',
   custom = 'custom',
 }
 
@@ -26,11 +22,10 @@ export enum SalesStage {
   negotiating = 'negotiating',
 }
 
-// for simplicity skipped , but there can be setup with unions for this type, so if you select type === listOfStrings the value would be string[]
-
 export type SalesDataItemBase = {
-  field: SalesDataFields;
+  kind: SalesDataKind; // this one to define system versus custom with additional customization
   name: string;
+  alias: string;
 };
 
 export type SalesDataItem =
@@ -57,14 +52,13 @@ export interface SalesDataRow {
   updatedAt: Date;
 }
 
-// export interface DefaultSalesDatum {
-//   name: string;
-//   stage: SalesStage;
-//   dateOfLastInteraction?: Date | null;
-//   patientsReferred?: number | null;
-//   contactsAndOrganizations?: string[] | null;
-// }
+export enum Comparator {
+  equal = 'equal',
+  contains = 'contains',
+  doesNotEqual = 'doesNotEqual',
+  greaterThan = 'greaterThan',
+  lessThan = 'lessThan',
+  //...
+}
 
-// export interface SalesDatum extends DefaultSalesDatum {
-//   [key: string]: number | string | Date | string[] | null | undefined;
-// }
+export type ChipItem = SalesDataItem & { selector?: { comparator?: Comparator; value?: string } };

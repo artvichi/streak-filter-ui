@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { SalesDataFields, SalesDataItem, SalesDataRow, SalesDataTypes } from '../types/typings';
+import { SalesDataKind, SalesDataItem, SalesDataRow, SalesDataTypes } from '../types/typings';
 import { getRandomArrayElement, getRandomArrayElements, getRandomIntBetween } from '../libs/utils';
 import { SALES_STAGES } from '../libs/constnts';
 import { MOCKED_EMAILS, MOCKED_FRUITS, MOCKED_LAST_NAMES, MOCKED_NAMES, MOCKED_VEGETABLES } from '../libs/mock-data';
@@ -15,27 +15,31 @@ import { DateTime } from 'luxon';
 const getDefaultSalesDataItems = (): SalesDataItem[] => {
   return [
     {
-      field: SalesDataFields.name,
+      kind: SalesDataKind.default,
       type: SalesDataTypes.string,
       name: 'Name',
+      alias: 'name',
       value: getRandomArrayElement(MOCKED_NAMES) + ' ' + getRandomArrayElement(MOCKED_LAST_NAMES),
     },
     {
-      field: SalesDataFields.stage,
+      kind: SalesDataKind.default,
       type: SalesDataTypes.string,
       name: 'Stage',
+      alias: 'stage',
       value: getRandomArrayElement(SALES_STAGES),
     },
     {
-      field: SalesDataFields.patientsReferred,
+      kind: SalesDataKind.default,
       type: SalesDataTypes.number,
       name: 'Patients Referred',
+      alias: 'patientsReferred',
       value: Math.random() > 0.1 ? getRandomIntBetween(0, 100) : null,
     },
     {
-      field: SalesDataFields.dateOfLastInteraction,
+      kind: SalesDataKind.default,
       type: SalesDataTypes.date,
       name: 'Date Of Last Interaction',
+      alias: 'dateOfLastInteraction',
       value:
         Math.random() > 0.1
           ? DateTime.local()
@@ -44,8 +48,9 @@ const getDefaultSalesDataItems = (): SalesDataItem[] => {
           : null,
     },
     {
-      field: SalesDataFields.contactsAndOrganizations,
+      kind: SalesDataKind.default,
       name: 'Contacts and Organizations',
+      alias: 'contactsAndOrganizations',
       type: SalesDataTypes.listOfStrings,
       value: Math.random() > 0.4 ? getRandomArrayElements(MOCKED_EMAILS, getRandomIntBetween(0, 3)) : null,
     },
@@ -55,27 +60,31 @@ const getDefaultSalesDataItems = (): SalesDataItem[] => {
 const getCustomSalesDataItems = (): SalesDataItem[] => {
   const dataList: SalesDataItem[] = [
     {
-      field: SalesDataFields.custom,
+      kind: SalesDataKind.custom,
       type: SalesDataTypes.string,
       name: 'Fruit',
+      alias: 'fruit',
       value: Math.random() > 0.1 ? getRandomArrayElement(MOCKED_FRUITS) : null,
     },
     {
-      field: SalesDataFields.custom,
+      kind: SalesDataKind.custom,
       type: SalesDataTypes.string,
       name: 'Vegetables',
+      alias: 'vegetables',
       value: Math.random() > 0.1 ? getRandomArrayElement(MOCKED_VEGETABLES) : null,
     },
     {
-      field: SalesDataFields.custom,
+      kind: SalesDataKind.custom,
       type: SalesDataTypes.number,
       name: 'Goods',
+      alias: 'goods',
       value: Math.random() > 0.1 ? getRandomIntBetween(0, 100) : null,
     },
     {
-      field: SalesDataFields.custom,
+      kind: SalesDataKind.custom,
       type: SalesDataTypes.date,
       name: 'Birthday',
+      alias: 'birthday',
       value:
         Math.random() > 0.1
           ? DateTime.local()
