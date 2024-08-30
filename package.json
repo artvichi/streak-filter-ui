@@ -7,7 +7,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "deploy": "firebase deploy --only hosting"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
