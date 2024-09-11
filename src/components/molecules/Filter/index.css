@@ -1,0 +1,22 @@
+.filter-container {
+  border-radius: 12px;
+  border: 2px solid #a9a9a9;
+  background-color: white;
+  display: flex;
+}
+
+.filter-label-block {
+  background-color: #dedddd;
+  padding: 12px 15px;
+  font-weight: 700;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.filter-input-block {
+  padding: 4px 8px;
+  width: 100%;
+}

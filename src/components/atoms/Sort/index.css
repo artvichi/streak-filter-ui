@@ -1,0 +1,16 @@
+.sort {
+  display: inline-block;
+  border-radius: 16px;
+  background-color: #e3e3e3;
+  margin-right: 6px;
+  font-size: 14px;
+  position: relative;
+  margin: 2px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.sort:focus {
+  outline-offset: 4px;
+  outline-color: blue;
+}

@@ -1,0 +1,16 @@
+.inline-input-block {
+  min-width: 200px;
+  display: inline-block;
+}
+
+.inline-input {
+  outline: none;
+  width: 100%;
+  border: 0;
+  height: 36px;
+  box-sizing: border-box;
+  padding: 0px 8px;
+  margin: 0;
+  flex-grow: 1;
+  font-size: 14px;
+}
